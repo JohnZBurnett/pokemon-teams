@@ -7,23 +7,30 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
 
-  function createAndAppendPokemon(trainerObj, newTrainerElement) {
+  function handleAppendingPokemon(trainerObj, newTrainerElement) {
     const pokemonArr = trainerObj.pokemons;
     pokemonArr.forEach( function(pokemonObj) {
-      newTrainerElement.append(createPokemonElement(pokemonObj))
+      newTrainerElement.append(createPokemonElement(pokemonObj, newTrainerElement))
     })
-    debugger;
   }
 
-  function createPokemonElement(pokemonObj) {
+  function createPokemonElement(pokemonObj, newTrainerElement) {
+    const newPokemonElement = document.createElement("li");
+    const newPokemonButton = document.createElement("button");
+    newPokemonElement.innerText = `${pokemonObj.nickname} (${pokemonObj.species})`
+    newPokemonButton.className = "release"
+    newPokemonButton.dataPokemonId = `${pokemonObj.id}`
+    newPokemonButton.innerText = "Release";
+    newPokemonElement.appendChild(newPokemonButton);
+    return newPokemonElement; 
+    // debugger;
 
   }
   function createTrainerElement(trainerObj) {
     const newTrainerElement = document.createElement("div");
     formatTrainerElementInformation(trainerObj, newTrainerElement);
-    createAndAppendPokemon(trainerObj, newTrainerElement);
+    handleAppendingPokemon(trainerObj, newTrainerElement);
     mainTag.append(newTrainerElement);
-    debugger;
   }
 
   function displayTrainer(trainerObj) {
@@ -34,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     newTrainerElement.className = "card";
     newTrainerElement.dataId = trainerObj.id;
     newTrainerElement.innerHTML += `<p>${trainerObj.name}</p>`
-    newTrainerElement.innerHTML += `<button data-trainer-id="${trainerObj.id}">Add Pokemon</button>`
+    newTrainerElement.innerHTML += `<button data-trainer-id="${trainerObj.id}">Add Pokemon</button><ul></ul>`
     return newTrainerElement;
   }
 
