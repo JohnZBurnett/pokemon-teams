@@ -8,6 +8,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   mainTag.addEventListener("click", handleAddingOrDeletingPokemon);
 
+  function addPokemonToTeam(event) {
+    let trainerElement = event.target.parentElement;
+    let payload = {trainer_id: event.target.dataset.trainerId};
+    const configObj = {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    }
+    fetch(POKEMONS_URL, configObj).then( resp => console.log(resp)); 
+  }
+
   function createPokemonElement(pokemonObj, newTrainerElement) {
     const newPokemonElement = document.createElement("li");
     const newPokemonButton = document.createElement("button");
@@ -55,7 +68,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
   function handleAddingOrDeletingPokemon(event) {
     if (event.target.className === "release" ) {
       handleDeletingPokemon(event);
-    }
+    } else if (event.target.innerText === "Add Pokemon") {
+        if (event.target.parentElement.querySelectorAll("li").length < 6) {
+          addPokemonToTeam(event);
+        } else {
+          window.alert("You can't add Pokemon to a full team! Release a Pokemon first, or store it at a PokeCenter.")
+        }
+      }
   }
 
   function handleDeletingPokemon(event) {
@@ -71,3 +90,4 @@ document.addEventListener("DOMContentLoaded", function(event) {
     fetch(TRAINERS_URL).then( function(response) { return response.json() }).then( function(trainersJson) { handleDisplayingTrainers(trainersJson)})
   }
   loadAndDisplayData();
+})
