@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       },
       body: JSON.stringify(payload)
     }
-    fetch(POKEMONS_URL, configObj).then( resp => resp.json() ).then( pokemonJson => createPokemonElement(pokemonJson, trainerElement));
+    fetch(POKEMONS_URL, configObj).then( resp => resp.json() ).then( pokemonJson =>  trainerElement.append(createPokemonElement(pokemonJson)));
   }
 
   function createPokemonElement(pokemonObj) {
