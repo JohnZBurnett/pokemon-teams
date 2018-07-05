@@ -6,23 +6,17 @@ const mainTag = document.querySelector("main");
 document.addEventListener("DOMContentLoaded", function(event) {
 
 
-
-  function handleAppendingPokemon(trainerObj, newTrainerElement) {
-    const pokemonArr = trainerObj.pokemons;
-    pokemonArr.forEach( function(pokemonObj) {
-      newTrainerElement.append(createPokemonElement(pokemonObj, newTrainerElement))
-    })
-  }
+  mainTag.addEventListener("click", handleAddingOrDeletingPokemon);
 
   function createPokemonElement(pokemonObj, newTrainerElement) {
     const newPokemonElement = document.createElement("li");
     const newPokemonButton = document.createElement("button");
     newPokemonElement.innerText = `${pokemonObj.nickname} (${pokemonObj.species})`
     newPokemonButton.className = "release"
-    newPokemonButton.dataPokemonId = `${pokemonObj.id}`
+    newPokemonButton.dataset.pokemonId = `${pokemonObj.id}`
     newPokemonButton.innerText = "Release";
     newPokemonElement.appendChild(newPokemonButton);
-    return newPokemonElement; 
+    return newPokemonElement;
     // debugger;
 
   }
@@ -31,6 +25,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
     formatTrainerElementInformation(trainerObj, newTrainerElement);
     handleAppendingPokemon(trainerObj, newTrainerElement);
     mainTag.append(newTrainerElement);
+  }
+
+  function deletePokemonFromDb(event) {
+    const configObj = {
+      method: 'DELETE'
+    };
+    fetch(POKEMONS_URL + `/${event.target.dataset.pokemonId}`, configObj)
   }
 
   function displayTrainer(trainerObj) {
@@ -44,6 +45,23 @@ document.addEventListener("DOMContentLoaded", function(event) {
     newTrainerElement.innerHTML += `<button data-trainer-id="${trainerObj.id}">Add Pokemon</button><ul></ul>`
     return newTrainerElement;
   }
+  function handleAppendingPokemon(trainerObj, newTrainerElement) {
+    const pokemonArr = trainerObj.pokemons;
+    pokemonArr.forEach( function(pokemonObj) {
+      newTrainerElement.append(createPokemonElement(pokemonObj, newTrainerElement))
+    })
+  }
+
+  function handleAddingOrDeletingPokemon(event) {
+    if (event.target.className === "release" ) {
+      handleDeletingPokemon(event);
+    }
+  }
+
+  function handleDeletingPokemon(event) {
+    event.target.parentElement.remove()
+    deletePokemonFromDb(event)
+  }
 
   function handleDisplayingTrainers(trainersJson) {
     trainersJson.forEach( function(trainer) { displayTrainer(trainer)});
@@ -53,15 +71,3 @@ document.addEventListener("DOMContentLoaded", function(event) {
     fetch(TRAINERS_URL).then( function(response) { return response.json() }).then( function(trainersJson) { handleDisplayingTrainers(trainersJson)})
   }
   loadAndDisplayData();
-
-//   <div class="card" data-id="1"><p>Prince</p>
-//   <button data-trainer-id="1">Add Pokemon</button>
-//   <ul>
-//     <li>Jacey (Kakuna) <button class="release" data-pokemon-id="140">Release</button></li>
-//     <li>Zachariah (Ditto) <button class="release" data-pokemon-id="141">Release</button></li>
-//     <li>Mittie (Farfetch'd) <button class="release" data-pokemon-id="149">Release</button></li>
-//     <li>Rosetta (Eevee) <button class="release" data-pokemon-id="150">Release</button></li>
-//     <li>Rod (Beedrill) <button class="release" data-pokemon-id="151">Release</button></li>
-//   </ul>
-// </div>
-})
