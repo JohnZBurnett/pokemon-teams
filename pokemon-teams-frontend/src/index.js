@@ -18,10 +18,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
       },
       body: JSON.stringify(payload)
     }
-    fetch(POKEMONS_URL, configObj).then( resp => console.log(resp)); 
+    fetch(POKEMONS_URL, configObj).then( resp => resp.json() ).then( pokemonJson => createPokemonElement(pokemonJson, trainerElement));
   }
 
-  function createPokemonElement(pokemonObj, newTrainerElement) {
+  function createPokemonElement(pokemonObj) {
     const newPokemonElement = document.createElement("li");
     const newPokemonButton = document.createElement("button");
     newPokemonElement.innerText = `${pokemonObj.nickname} (${pokemonObj.species})`
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   function handleAppendingPokemon(trainerObj, newTrainerElement) {
     const pokemonArr = trainerObj.pokemons;
     pokemonArr.forEach( function(pokemonObj) {
-      newTrainerElement.append(createPokemonElement(pokemonObj, newTrainerElement))
+      newTrainerElement.append(createPokemonElement(pokemonObj))
     })
   }
 
